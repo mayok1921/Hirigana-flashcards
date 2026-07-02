@@ -1,3 +1,3 @@
-# Language Coach
+# Language Coach Adaptive
 
-Personal no-ads language learning PWA.
+Adaptive no-ads language learning PWA.
