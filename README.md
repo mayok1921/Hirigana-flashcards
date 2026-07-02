@@ -1,3 +1,3 @@
-# Hiragana Flashcards
+# Language Coach
 
-Personal hiragana flashcard PWA.
+Personal no-ads language learning PWA.

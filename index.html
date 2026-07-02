@@ -1,208 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hiragana Flashcards</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#222222">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      color: #222;
-    }
-    h1 { margin-bottom: 5px; }
-    p { margin-top: 0; color: #555; }
-    .card {
-      background: white;
-      max-width: 420px;
-      height: 260px;
-      margin: 25px auto 15px;
-      border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      cursor: pointer;
-      user-select: none;
-    }
-    .front { font-size: 96px; margin-bottom: 10px; }
-    .back { font-size: 42px; color: #444; display: none; }
-    .hint { font-size: 14px; color: #777; margin-top: 12px; }
-    button {
-      font-size: 16px;
-      padding: 12px 16px;
-      margin: 5px;
-      border: none;
-      border-radius: 10px;
-      background: #222;
-      color: white;
-      cursor: pointer;
-    }
-    button.secondary { background: #666; }
-    button.good { background: #166534; }
-    button.bad { background: #991b1b; }
-    button.warning { background: #92400e; }
-    .progress { margin-top: 15px; font-size: 15px; color: #555; }
-    .mode { font-weight: bold; margin-top: 12px; color: #333; }
-    .missed-list, .rows {
-      max-width: 650px;
-      margin: 20px auto;
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-      text-align: left;
-    }
-    .rows strong { display: inline-block; width: 55px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Coach</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#222222">
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f6f6f6;margin:0;padding:18px;color:#222;text-align:center}
+.screen{display:none;max-width:760px;margin:0 auto}.active{display:block}
+.panel,.deck-card{background:white;border-radius:16px;box-shadow:0 4px 16px #0002;padding:18px;margin:16px auto;text-align:left}
+.center{text-align:center}button{font-size:16px;padding:12px 16px;margin:6px;border:0;border-radius:12px;background:#222;color:white;cursor:pointer}
+.secondary{background:#666}.good{background:#166534}.bad{background:#991b1b}.warning{background:#92400e}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}.deck-card{cursor:pointer}
+.card{background:white;max-width:420px;height:260px;margin:22px auto 15px;border-radius:18px;box-shadow:0 8px 25px #0002;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;user-select:none}
+.front{font-size:92px;margin-bottom:8px}.back{font-size:40px;color:#444;display:none}.hint{font-size:14px;color:#777;margin-top:12px}
+.progress{margin-top:12px;font-size:15px;color:#555}.question{font-size:72px;margin:22px 0 12px}.small{font-size:14px;color:#666}
+.choice{display:block;width:100%;max-width:420px;margin:8px auto;background:white;color:#222;border:2px solid #ddd;text-align:left}
+.correct{border-color:#166534!important;background:#dcfce7!important}.wrong{border-color:#991b1b!important;background:#fee2e2!important}
+input{font-size:22px;padding:12px;border:2px solid #ddd;border-radius:12px;width:100%;max-width:360px;text-align:center;margin:10px auto;display:block}
+.stat-row{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0;gap:10px}.pill{display:inline-block;background:#eee;border-radius:999px;padding:5px 10px;margin:3px;font-size:14px}
+</style>
 </head>
 <body>
-  <h1>Hiragana Flashcards</h1>
-  <p>Your current set only: A, K, S, T, N, H, M, and Y rows.</p>
+<section id="home" class="screen active">
+<h1>Language Coach</h1><p>No ads. No login. Just your study app.</p>
+<div class="panel center"><h2>Today’s Focus</h2><p id="coachText"></p><button onclick="showScreen('decks')">Start Studying</button><button class="secondary" onclick="showScreen('dashboard')">Dashboard</button></div>
+</section>
 
-  <div class="mode" id="modeText">Main Deck</div>
+<section id="decks" class="screen">
+<h2>Choose a Deck</h2><div class="grid">
+<div class="deck-card" onclick="selectDeck('current')"><h3>Current Hiragana</h3><p>A, K, S, T, N, H, M, and Y rows.</p></div>
+<div class="deck-card" onclick="selectDeck('next')"><h3>Next 8 Hiragana</h3><p>らりるれろ, わ, を, ん.</p></div>
+<div class="deck-card" onclick="selectDeck('all')"><h3>All Basic Hiragana</h3><p>Current set + next 8 together.</p></div>
+<div class="deck-card" onclick="selectDeck('missed')"><h3>Missed Set</h3><p>Only cards you marked wrong.</p></div>
+</div><button class="secondary" onclick="showScreen('home')">Back</button>
+</section>
 
-  <div class="card" onclick="flipCard()">
-    <div class="front" id="front">あ</div>
-    <div class="back" id="back">a</div>
-    <div class="hint">Tap card to reveal / hide answer</div>
-  </div>
+<section id="modes" class="screen">
+<h2 id="deckTitle">Choose Mode</h2><div class="grid">
+<div class="deck-card" onclick="startMode('flashcard')"><h3>Flashcards</h3><p>Tap to reveal. Mark Got it or Missed it.</p></div>
+<div class="deck-card" onclick="startMode('multiple')"><h3>Multiple Choice</h3><p>Choose the correct reading.</p></div>
+<div class="deck-card" onclick="startMode('typing')"><h3>Typing</h3><p>Type the reading from memory.</p></div>
+</div><button class="secondary" onclick="showScreen('decks')">Back to Decks</button>
+</section>
 
-  <div>
-    <button class="good" onclick="markCorrect()">Got it</button>
-    <button class="bad" onclick="markWrong()">Missed it</button>
-  </div>
+<section id="study" class="screen">
+<h2 id="studyTitle">Study</h2>
+<div id="flashcardArea"><div class="card" onclick="flipCard()"><div class="front" id="front">あ</div><div class="back" id="back">a</div><div class="hint">Tap card to reveal / hide answer</div></div><button class="good" onclick="markCorrect()">Got it</button><button class="bad" onclick="markWrong()">Missed it</button></div>
+<div id="multipleArea" style="display:none;"><div class="question" id="mcQuestion">あ</div><div id="choices"></div><p id="mcFeedback" class="small"></p></div>
+<div id="typingArea" style="display:none;"><div class="question" id="typingQuestion">あ</div><input id="typingInput" placeholder="Type reading, e.g. a" onkeydown="if(event.key==='Enter') checkTyping()"><button onclick="checkTyping()">Check</button><p id="typingFeedback" class="small"></p><button id="typingNext" style="display:none;" onclick="nextQuestion()">Next</button></div>
+<div><button onclick="prevCard()">Previous</button><button onclick="nextQuestion()">Next</button><button class="secondary" onclick="shuffleCurrentDeck()">Shuffle</button></div>
+<div class="progress" id="progress"></div><button class="secondary" onclick="showScreen('modes')">Back to Modes</button>
+</section>
 
-  <div>
-    <button onclick="prevCard()">Previous</button>
-    <button onclick="nextCard()">Next</button>
-    <button class="secondary" onclick="shuffleCurrentDeck()">Shuffle</button>
-  </div>
+<section id="dashboard" class="screen">
+<h2>Dashboard</h2><div class="panel">
+<div class="stat-row"><strong>Total Questions</strong><span id="totalQuestions">0</span></div>
+<div class="stat-row"><strong>Correct</strong><span id="totalCorrect">0</span></div>
+<div class="stat-row"><strong>Accuracy</strong><span id="accuracy">0%</span></div>
+<div class="stat-row"><strong>Missed Set</strong><span id="missedCount">0</span></div>
+</div><div class="panel"><h3>Coach Preview</h3><p id="coachAnalysis"></p><div id="weakCards"></div></div>
+<button onclick="showScreen('decks')">Study</button><button class="secondary" onclick="showScreen('home')">Home</button><button class="bad" onclick="resetProgress()">Reset Progress</button>
+</section>
 
-  <div>
-    <button class="warning" onclick="studyMissed()">Study Missed Set</button>
-    <button class="secondary" onclick="studyMain()">Back to Main Deck</button>
-    <button class="secondary" onclick="clearMissed()">Clear Missed Set</button>
-  </div>
-
-  <div class="progress" id="progress"></div>
-
-  <div class="missed-list">
-    <h3>Missed Set</h3>
-    <p id="missedText">No missed cards yet.</p>
-  </div>
-
-  <div class="rows">
-    <p><strong>A:</strong> あ い う え お</p>
-    <p><strong>K:</strong> か き く け こ</p>
-    <p><strong>S:</strong> さ し す せ そ</p>
-    <p><strong>T:</strong> た ち つ て と</p>
-    <p><strong>N:</strong> な に ぬ ね の</p>
-    <p><strong>H:</strong> は ひ ふ へ ほ</p>
-    <p><strong>M:</strong> ま み む め も</p>
-    <p><strong>Y:</strong> や ゆ よ</p>
-  </div>
-
-  <script>
-    const mainDeck = [
-      ["あ", "a"], ["い", "i"], ["う", "u"], ["え", "e"], ["お", "o"],
-      ["か", "ka"], ["き", "ki"], ["く", "ku"], ["け", "ke"], ["こ", "ko"],
-      ["さ", "sa"], ["し", "shi"], ["す", "su"], ["せ", "se"], ["そ", "so"],
-      ["た", "ta"], ["ち", "chi"], ["つ", "tsu"], ["て", "te"], ["と", "to"],
-      ["な", "na"], ["に", "ni"], ["ぬ", "nu"], ["ね", "ne"], ["の", "no"],
-      ["は", "ha"], ["ひ", "hi"], ["ふ", "fu"], ["へ", "he"], ["ほ", "ho"],
-      ["ま", "ma"], ["み", "mi"], ["む", "mu"], ["め", "me"], ["も", "mo"],
-      ["や", "ya"], ["ゆ", "yu"], ["よ", "yo"]
-    ];
-
-    let missedDeck = JSON.parse(localStorage.getItem("missedDeck") || "[]");
-    let currentDeck = mainDeck.slice();
-    let deckMode = "main";
-    let current = 0;
-    let revealed = false;
-
-    function saveMissed() { localStorage.setItem("missedDeck", JSON.stringify(missedDeck)); }
-    function sameCard(a, b) { return a[0] === b[0] && a[1] === b[1]; }
-
-    function updateCard() {
-      if (currentDeck.length === 0) {
-        document.getElementById("front").textContent = "✓";
-        document.getElementById("back").textContent = "";
-        document.getElementById("back").style.display = "none";
-        document.getElementById("progress").textContent = "No cards in this deck.";
-        document.getElementById("modeText").textContent = deckMode === "main" ? "Main Deck" : "Missed Set Review";
-        updateMissedList();
-        return;
-      }
-      if (current >= currentDeck.length) current = 0;
-      document.getElementById("front").textContent = currentDeck[current][0];
-      document.getElementById("back").textContent = currentDeck[current][1];
-      document.getElementById("back").style.display = revealed ? "block" : "none";
-      document.getElementById("progress").textContent =
-        `Card ${current + 1} of ${currentDeck.length} | Missed set: ${missedDeck.length}`;
-      document.getElementById("modeText").textContent = deckMode === "main" ? "Main Deck" : "Missed Set Review";
-      updateMissedList();
-    }
-
-    function updateMissedList() {
-      const missedText = document.getElementById("missedText");
-      missedText.textContent = missedDeck.length === 0
-        ? "No missed cards yet."
-        : missedDeck.map(card => `${card[0]} = ${card[1]}`).join("   |   ");
-    }
-
-    function flipCard() { revealed = !revealed; updateCard(); }
-    function nextCard() { if (!currentDeck.length) return; current = (current + 1) % currentDeck.length; revealed = false; updateCard(); }
-    function prevCard() { if (!currentDeck.length) return; current = (current - 1 + currentDeck.length) % currentDeck.length; revealed = false; updateCard(); }
-
-    function markWrong() {
-      if (!currentDeck.length) return;
-      const card = currentDeck[current];
-      if (!missedDeck.some(missed => sameCard(missed, card))) missedDeck.push(card);
-      saveMissed();
-      nextCard();
-    }
-
-    function markCorrect() {
-      if (!currentDeck.length) return;
-      const card = currentDeck[current];
-      if (deckMode === "missed") {
-        missedDeck = missedDeck.filter(missed => !sameCard(missed, card));
-        saveMissed();
-        currentDeck = missedDeck.slice();
-        if (current >= currentDeck.length) current = 0;
-        revealed = false;
-        updateCard();
-      } else {
-        nextCard();
-      }
-    }
-
-    function shuffleCurrentDeck() {
-      for (let i = currentDeck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [currentDeck[i], currentDeck[j]] = [currentDeck[j], currentDeck[i]];
-      }
-      current = 0;
-      revealed = false;
-      updateCard();
-    }
-
-    function studyMissed() { deckMode = "missed"; currentDeck = missedDeck.slice(); current = 0; revealed = false; updateCard(); }
-    function studyMain() { deckMode = "main"; currentDeck = mainDeck.slice(); current = 0; revealed = false; updateCard(); }
-    function clearMissed() { missedDeck = []; saveMissed(); if (deckMode === "missed") currentDeck = []; current = 0; revealed = false; updateCard(); }
-
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-
-    updateCard();
-  </script>
+<script>
+const decks={current:{title:"Current Hiragana",cards:[
+["あ","a"],["い","i"],["う","u"],["え","e"],["お","o"],["か","ka"],["き","ki"],["く","ku"],["け","ke"],["こ","ko"],["さ","sa"],["し","shi"],["す","su"],["せ","se"],["そ","so"],["た","ta"],["ち","chi"],["つ","tsu"],["て","te"],["と","to"],["な","na"],["に","ni"],["ぬ","nu"],["ね","ne"],["の","no"],["は","ha"],["ひ","hi"],["ふ","fu"],["へ","he"],["ほ","ho"],["ま","ma"],["み","mi"],["む","mu"],["め","me"],["も","mo"],["や","ya"],["ゆ","yu"],["よ","yo"]
+]},next:{title:"Next 8 Hiragana",cards:[["ら","ra"],["り","ri"],["る","ru"],["れ","re"],["ろ","ro"],["わ","wa"],["を","wo/o"],["ん","n"]]}};
+decks.all={title:"All Basic Hiragana",cards:decks.current.cards.concat(decks.next.cards)};
+let missedDeck=JSON.parse(localStorage.getItem("missedDeck")||"[]"),stats=JSON.parse(localStorage.getItem("stats")||"{}");
+let selectedDeckKey="current",currentDeck=decks.current.cards.slice(),currentMode="flashcard",current=0,revealed=false,answered=false;
+function save(){localStorage.setItem("missedDeck",JSON.stringify(missedDeck));localStorage.setItem("stats",JSON.stringify(stats))}
+function cardId(c){return c[0]+"|"+c[1]} function sameCard(a,b){return a[0]===b[0]&&a[1]===b[1]}
+function ensureStats(c){let id=cardId(c);if(!stats[id])stats[id]={seen:0,correct:0,missed:0};return stats[id]}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="dashboard")updateDashboard();if(id==="home")updateCoachHome()}
+function selectDeck(key){selectedDeckKey=key;if(key==="missed"){currentDeck=missedDeck.slice();deckTitle.textContent="Missed Set"}else{currentDeck=decks[key].cards.slice();deckTitle.textContent=decks[key].title}current=0;showScreen("modes")}
+function startMode(mode){currentMode=mode;current=0;revealed=false;answered=false;studyTitle.textContent=(selectedDeckKey==="missed"?"Missed Set":decks[selectedDeckKey].title)+" - "+(mode==="flashcard"?"Flashcards":mode==="multiple"?"Multiple Choice":"Typing");flashcardArea.style.display=mode==="flashcard"?"block":"none";multipleArea.style.display=mode==="multiple"?"block":"none";typingArea.style.display=mode==="typing"?"block":"none";showScreen("study");updateStudy()}
+function updateStudy(){if(currentDeck.length===0){progress.textContent="No cards in this deck.";front.textContent="✓";back.textContent="";return}if(current>=currentDeck.length)current=0;let card=currentDeck[current];if(currentMode==="flashcard"){front.textContent=card[0];back.textContent=card[1];back.style.display=revealed?"block":"none"}else if(currentMode==="multiple"){buildMultipleChoice(card)}else{typingQuestion.textContent=card[0];typingInput.value="";typingFeedback.textContent="";typingNext.style.display="none"}progress.textContent=`Card ${current+1} of ${currentDeck.length} | Missed set: ${missedDeck.length}`}
+function flipCard(){if(currentMode==="flashcard"){revealed=!revealed;updateStudy()}}
+function nextQuestion(){if(!currentDeck.length)return;current=(current+1)%currentDeck.length;revealed=false;answered=false;updateStudy()}
+function prevCard(){if(!currentDeck.length)return;current=(current-1+currentDeck.length)%currentDeck.length;revealed=false;answered=false;updateStudy()}
+function record(card,correct){let s=ensureStats(card);s.seen++;correct?s.correct++:s.missed++;save()}
+function addMissed(card){if(!missedDeck.some(m=>sameCard(m,card)))missedDeck.push(card);save()}
+function removeMissed(card){missedDeck=missedDeck.filter(m=>!sameCard(m,card));if(selectedDeckKey==="missed"){currentDeck=missedDeck.slice();if(current>=currentDeck.length)current=0}save()}
+function markCorrect(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,true);if(selectedDeckKey==="missed")removeMissed(card);nextQuestion()}
+function markWrong(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,false);addMissed(card);nextQuestion()}
+function buildMultipleChoice(card){answered=false;mcQuestion.textContent=card[0];mcFeedback.textContent="";let pool=decks.all.cards.filter(c=>!sameCard(c,card));let choices=[card];while(choices.length<4&&pool.length){choices.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0])}choices.sort(()=>Math.random()-0.5);choicesDiv=choices;document.getElementById("choices").innerHTML="";choices.forEach(ch=>{let b=document.createElement("button");b.className="choice";b.textContent=ch[1];b.onclick=()=>answerMC(b,ch,card);document.getElementById("choices").appendChild(b)})}
+function answerMC(button,choice,correctCard){if(answered)return;answered=true;document.querySelectorAll("button.choice").forEach(b=>{if(b.textContent===correctCard[1])b.classList.add("correct")});if(sameCard(choice,correctCard)){record(correctCard,true);if(selectedDeckKey==="missed")removeMissed(correctCard);mcFeedback.textContent="Correct."}else{record(correctCard,false);addMissed(correctCard);button.classList.add("wrong");mcFeedback.textContent=`Missed it. ${correctCard[0]} = ${correctCard[1]}`}setTimeout(nextQuestion,900)}
+function checkTyping(){if(!currentDeck.length)return;let card=currentDeck[current],input=typingInput.value.trim().toLowerCase(),accepted=card[1].toLowerCase().split("/").map(x=>x.trim()),ok=accepted.includes(input);if(ok){record(card,true);if(selectedDeckKey==="missed")removeMissed(card);typingFeedback.textContent="Correct."}else{record(card,false);addMissed(card);typingFeedback.textContent=`Missed it. Correct answer: ${card[1]}`}typingNext.style.display="inline-block"}
+function shuffleCurrentDeck(){for(let i=currentDeck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[currentDeck[i],currentDeck[j]]=[currentDeck[j],currentDeck[i]]}current=0;revealed=false;updateStudy()}
+function updateDashboard(){let total=0,correct=0,weak=[];Object.keys(stats).forEach(id=>{total+=stats[id].seen;correct+=stats[id].correct;if(stats[id].seen>=2&&stats[id].correct/stats[id].seen<.8)weak.push({id,acc:stats[id].correct/stats[id].seen})});totalQuestions.textContent=total;totalCorrect.textContent=correct;accuracy.textContent=total?Math.round(correct/total*100)+"%":"0%";missedCount.textContent=missedDeck.length;weak.sort((a,b)=>a.acc-b.acc);weakCards.innerHTML="";weak.slice(0,8).forEach(w=>{let [k,r]=w.id.split("|"),s=document.createElement("span");s.className="pill";s.textContent=`${k} = ${r}`;weakCards.appendChild(s)});coachAnalysis.textContent=total<5?"Study a few cards first, then this will recommend what to review.":weak.length?"Focus on weak cards before adding new material. Use Missed Set + Typing mode.":missedDeck.length<=2?"You're close to being ready for the next 8 hiragana. Try a full run at 90%+.":"Keep reviewing your missed set first."}
+function updateCoachHome(){let total=0,correct=0;Object.keys(stats).forEach(id=>{total+=stats[id].seen;correct+=stats[id].correct});let text="Start with your current hiragana set. If you miss cards, review the missed set before learning new ones.";if(missedDeck.length)text=`You have ${missedDeck.length} missed card(s). Review those first.`;if(total>=10){let acc=Math.round(correct/total*100);text=`Current accuracy: ${acc}%. `+(missedDeck.length?"Start with your missed set today.":"You're clear to continue the current deck.")}coachText.textContent=text}
+function resetProgress(){if(!confirm("Reset all progress and missed cards?"))return;missedDeck=[];stats={};save();updateDashboard()}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js");updateCoachHome();
+</script>
 </body>
 </html>
