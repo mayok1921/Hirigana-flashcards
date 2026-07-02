@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hiragana Flashcards</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#222222">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: #222;
+    }
+    h1 { margin-bottom: 5px; }
+    p { margin-top: 0; color: #555; }
+    .card {
+      background: white;
+      max-width: 420px;
+      height: 260px;
+      margin: 25px auto 15px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+      user-select: none;
+    }
+    .front { font-size: 96px; margin-bottom: 10px; }
+    .back { font-size: 42px; color: #444; display: none; }
+    .hint { font-size: 14px; color: #777; margin-top: 12px; }
+    button {
+      font-size: 16px;
+      padding: 12px 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+    button.secondary { background: #666; }
+    button.good { background: #166534; }
+    button.bad { background: #991b1b; }
+    button.warning { background: #92400e; }
+    .progress { margin-top: 15px; font-size: 15px; color: #555; }
+    .mode { font-weight: bold; margin-top: 12px; color: #333; }
+    .missed-list, .rows {
+      max-width: 650px;
+      margin: 20px auto;
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      text-align: left;
+    }
+    .rows strong { display: inline-block; width: 55px; }
+  </style>
+</head>
+<body>
+  <h1>Hiragana Flashcards</h1>
+  <p>Your current set only: A, K, S, T, N, H, M, and Y rows.</p>
+
+  <div class="mode" id="modeText">Main Deck</div>
+
+  <div class="card" onclick="flipCard()">
+    <div class="front" id="front">あ</div>
+    <div class="back" id="back">a</div>
+    <div class="hint">Tap card to reveal / hide answer</div>
+  </div>
+
+  <div>
+    <button class="good" onclick="markCorrect()">Got it</button>
+    <button class="bad" onclick="markWrong()">Missed it</button>
+  </div>
+
+  <div>
+    <button onclick="prevCard()">Previous</button>
+    <button onclick="nextCard()">Next</button>
+    <button class="secondary" onclick="shuffleCurrentDeck()">Shuffle</button>
+  </div>
+
+  <div>
+    <button class="warning" onclick="studyMissed()">Study Missed Set</button>
+    <button class="secondary" onclick="studyMain()">Back to Main Deck</button>
+    <button class="secondary" onclick="clearMissed()">Clear Missed Set</button>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="missed-list">
+    <h3>Missed Set</h3>
+    <p id="missedText">No missed cards yet.</p>
+  </div>
+
+  <div class="rows">
+    <p><strong>A:</strong> あ い う え お</p>
+    <p><strong>K:</strong> か き く け こ</p>
+    <p><strong>S:</strong> さ し す せ そ</p>
+    <p><strong>T:</strong> た ち つ て と</p>
+    <p><strong>N:</strong> な に ぬ ね の</p>
+    <p><strong>H:</strong> は ひ ふ へ ほ</p>
+    <p><strong>M:</strong> ま み む め も</p>
+    <p><strong>Y:</strong> や ゆ よ</p>
+  </div>
+
+  <script>
+    const mainDeck = [
+      ["あ", "a"], ["い", "i"], ["う", "u"], ["え", "e"], ["お", "o"],
+      ["か", "ka"], ["き", "ki"], ["く", "ku"], ["け", "ke"], ["こ", "ko"],
+      ["さ", "sa"], ["し", "shi"], ["す", "su"], ["せ", "se"], ["そ", "so"],
+      ["た", "ta"], ["ち", "chi"], ["つ", "tsu"], ["て", "te"], ["と", "to"],
+      ["な", "na"], ["に", "ni"], ["ぬ", "nu"], ["ね", "ne"], ["の", "no"],
+      ["は", "ha"], ["ひ", "hi"], ["ふ", "fu"], ["へ", "he"], ["ほ", "ho"],
+      ["ま", "ma"], ["み", "mi"], ["む", "mu"], ["め", "me"], ["も", "mo"],
+      ["や", "ya"], ["ゆ", "yu"], ["よ", "yo"]
+    ];
+
+    let missedDeck = JSON.parse(localStorage.getItem("missedDeck") || "[]");
+    let currentDeck = mainDeck.slice();
+    let deckMode = "main";
+    let current = 0;
+    let revealed = false;
+
+    function saveMissed() { localStorage.setItem("missedDeck", JSON.stringify(missedDeck)); }
+    function sameCard(a, b) { return a[0] === b[0] && a[1] === b[1]; }
+
+    function updateCard() {
+      if (currentDeck.length === 0) {
+        document.getElementById("front").textContent = "✓";
+        document.getElementById("back").textContent = "";
+        document.getElementById("back").style.display = "none";
+        document.getElementById("progress").textContent = "No cards in this deck.";
+        document.getElementById("modeText").textContent = deckMode === "main" ? "Main Deck" : "Missed Set Review";
+        updateMissedList();
+        return;
+      }
+      if (current >= currentDeck.length) current = 0;
+      document.getElementById("front").textContent = currentDeck[current][0];
+      document.getElementById("back").textContent = currentDeck[current][1];
+      document.getElementById("back").style.display = revealed ? "block" : "none";
+      document.getElementById("progress").textContent =
+        `Card ${current + 1} of ${currentDeck.length} | Missed set: ${missedDeck.length}`;
+      document.getElementById("modeText").textContent = deckMode === "main" ? "Main Deck" : "Missed Set Review";
+      updateMissedList();
+    }
+
+    function updateMissedList() {
+      const missedText = document.getElementById("missedText");
+      missedText.textContent = missedDeck.length === 0
+        ? "No missed cards yet."
+        : missedDeck.map(card => `${card[0]} = ${card[1]}`).join("   |   ");
+    }
+
+    function flipCard() { revealed = !revealed; updateCard(); }
+    function nextCard() { if (!currentDeck.length) return; current = (current + 1) % currentDeck.length; revealed = false; updateCard(); }
+    function prevCard() { if (!currentDeck.length) return; current = (current - 1 + currentDeck.length) % currentDeck.length; revealed = false; updateCard(); }
+
+    function markWrong() {
+      if (!currentDeck.length) return;
+      const card = currentDeck[current];
+      if (!missedDeck.some(missed => sameCard(missed, card))) missedDeck.push(card);
+      saveMissed();
+      nextCard();
+    }
+
+    function markCorrect() {
+      if (!currentDeck.length) return;
+      const card = currentDeck[current];
+      if (deckMode === "missed") {
+        missedDeck = missedDeck.filter(missed => !sameCard(missed, card));
+        saveMissed();
+        currentDeck = missedDeck.slice();
+        if (current >= currentDeck.length) current = 0;
+        revealed = false;
+        updateCard();
+      } else {
+        nextCard();
+      }
+    }
+
+    function shuffleCurrentDeck() {
+      for (let i = currentDeck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [currentDeck[i], currentDeck[j]] = [currentDeck[j], currentDeck[i]];
+      }
+      current = 0;
+      revealed = false;
+      updateCard();
+    }
+
+    function studyMissed() { deckMode = "missed"; currentDeck = missedDeck.slice(); current = 0; revealed = false; updateCard(); }
+    function studyMain() { deckMode = "main"; currentDeck = mainDeck.slice(); current = 0; revealed = false; updateCard(); }
+    function clearMissed() { missedDeck = []; saveMissed(); if (deckMode === "missed") currentDeck = []; current = 0; revealed = false; updateCard(); }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+
+    updateCard();
+  </script>
+</body>
+</html>
