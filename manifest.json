@@ -1,10 +1,10 @@
 {
-  "name": "Language Coach Adaptive",
-  "short_name": "LangCoach",
+  "name": "DragoLearn",
+  "short_name": "DragoLearn",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f6f6f6",
-  "theme_color": "#222222",
+  "background_color": "#090914",
+  "theme_color": "#0b0b14",
   "icons": [
     {
       "src": "icon-192.png",

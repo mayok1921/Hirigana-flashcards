@@ -3,115 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Language Coach Adaptive</title>
+<title>DragoLearn</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#222222">
+<meta name="theme-color" content="#0b0b14">
 <style>
-*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f6f6f6;margin:0;padding:18px;color:#222;text-align:center}
-.screen{display:none;max-width:780px;margin:0 auto}.active{display:block}
-.panel,.deck-card{background:white;border-radius:16px;box-shadow:0 4px 16px #0002;padding:18px;margin:16px auto;text-align:left}
-.center{text-align:center}button{font-size:16px;padding:12px 16px;margin:6px;border:0;border-radius:12px;background:#222;color:white;cursor:pointer}
-.secondary{background:#666}.good{background:#166534}.bad{background:#991b1b}.warning{background:#92400e}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}.deck-card{cursor:pointer}
-.card{background:white;max-width:420px;height:260px;margin:22px auto 15px;border-radius:18px;box-shadow:0 8px 25px #0002;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;user-select:none}
-.front{font-size:92px;margin-bottom:8px}.back{font-size:40px;color:#444;display:none}.hint{font-size:14px;color:#777;margin-top:12px}
-.progress{margin-top:12px;font-size:15px;color:#555}.question{font-size:72px;margin:22px 0 12px}.small{font-size:14px;color:#666}
-.choice{display:block;width:100%;max-width:420px;margin:8px auto;background:white;color:#222;border:2px solid #ddd;text-align:left}
-.correct{border-color:#166534!important;background:#dcfce7!important}.wrong{border-color:#991b1b!important;background:#fee2e2!important}
-input{font-size:22px;padding:12px;border:2px solid #ddd;border-radius:12px;width:100%;max-width:360px;text-align:center;margin:10px auto;display:block}
-.stat-row{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0;gap:10px}.pill{display:inline-block;background:#eee;border-radius:999px;padding:5px 10px;margin:3px;font-size:14px}
-.bar{width:100%;height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:#222;width:0%}
-.mastery-list{font-size:14px}.mastery-item{display:grid;grid-template-columns:60px 1fr 52px;align-items:center;gap:8px;margin:8px 0}
+:root{--bg:#090914;--panel:#12121f;--panel2:#181829;--border:#2a2a3d;--text:#f5f3ff;--muted:#b8b4c9;--purple:#9b5cff;--purple2:#6d28d9;--green:#4ade80;--red:#f43f5e}
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:radial-gradient(circle at top left,#261345 0,#090914 35%),linear-gradient(135deg,#090914,#0f1022);margin:0;padding:18px;color:var(--text);text-align:center}
+h1,h2,h3{margin-bottom:8px}p{color:var(--muted)}
+.screen{display:none;max-width:900px;margin:0 auto}.active{display:block}
+.logo-dragon{font-size:72px;filter:drop-shadow(0 0 18px #9b5cff)}
+.app-title{font-size:34px;font-weight:800}.app-title span{color:var(--purple)}
+.panel,.deck-card{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 30px #0008;padding:18px;margin:16px auto;text-align:left}
+.center{text-align:center}
+button{font-size:16px;padding:12px 16px;margin:6px;border:1px solid #3a2a66;border-radius:13px;background:linear-gradient(135deg,var(--purple2),var(--purple));color:white;cursor:pointer;box-shadow:0 4px 14px #0005}
+button.secondary{background:#232337;border-color:#383852}.good{background:linear-gradient(135deg,#15803d,#4ade80)!important;color:#07110b}.bad{background:linear-gradient(135deg,#9f1239,#f43f5e)!important}.warning{background:linear-gradient(135deg,#c2410c,#fb923c)!important}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}.deck-card{cursor:pointer;transition:.15s}.deck-card:hover{transform:translateY(-2px);border-color:var(--purple)}
+.card{background:linear-gradient(145deg,#171727,#10101d);max-width:420px;height:260px;margin:22px auto 15px;border-radius:22px;border:1px solid var(--border);box-shadow:0 12px 35px #0009,0 0 22px #6d28d933;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;user-select:none}
+.front{font-size:92px;margin-bottom:8px;text-shadow:0 0 18px #9b5cff}.back{font-size:40px;color:#ddd6fe;display:none}.hint{font-size:14px;color:var(--muted);margin-top:12px}
+.progress{margin-top:12px;font-size:15px;color:var(--muted)}.question{font-size:72px;margin:22px 0 12px;text-shadow:0 0 16px #9b5cff}.small{font-size:14px;color:var(--muted)}
+.choice{display:block;width:100%;max-width:420px;margin:8px auto;background:#181829;color:var(--text);border:2px solid var(--border);text-align:left}.correct{border-color:var(--green)!important;background:#12351f!important}.wrong{border-color:var(--red)!important;background:#3a1020!important}
+input{font-size:22px;padding:12px;border:2px solid var(--border);border-radius:12px;width:100%;max-width:360px;text-align:center;margin:10px auto;display:block;background:#11111f;color:var(--text)}
+.stat-row{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:8px 0;gap:10px}.pill{display:inline-block;background:#2b174e;color:#d8b4fe;border:1px solid #5b21b6;border-radius:999px;padding:6px 11px;margin:4px;font-size:14px}
+.bar{width:100%;height:14px;background:#29293a;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--green));width:0%}.mastery-list{font-size:14px}.mastery-item{display:grid;grid-template-columns:65px 1fr 52px;align-items:center;gap:8px;margin:8px 0}
+.quote{border-left:4px solid var(--purple);padding-left:12px;color:#ddd6fe}.dragon-bubble{display:flex;gap:12px;align-items:center;background:#161629;border:1px solid var(--border);border-radius:16px;padding:12px}.dragon-small{font-size:46px;filter:drop-shadow(0 0 10px #9b5cff)}
+@media(max-width:600px){body{padding:14px}.front,.question{font-size:78px}.app-title{font-size:30px}}
 </style>
 </head>
 <body>
 <section id="home" class="screen active">
-<h1>Language Coach</h1><p>Adaptive study. No ads. No login.</p>
-<div class="panel center"><h2>Today’s Lesson</h2><p id="coachText"></p><button onclick="startRecommendedLesson()">Start Recommended Lesson</button><button class="secondary" onclick="showScreen('decks')">Choose Deck</button><button class="secondary" onclick="showScreen('dashboard')">Dashboard</button></div>
+<div class="logo-dragon">🐉</div><div class="app-title"><span>Drago</span>Learn</div><p>Learn smarter. Every day.</p>
+<div class="panel center"><h2>Today’s Lesson</h2><div class="dragon-bubble"><div class="dragon-small">🐲</div><p id="coachText"></p></div><button onclick="startRecommendedLesson()">Start Recommended Lesson</button><button class="secondary" onclick="showScreen('decks')">Choose Deck</button><button class="secondary" onclick="showScreen('dashboard')">Dashboard</button></div>
 </section>
-
-<section id="decks" class="screen">
-<h2>Choose a Deck</h2><div class="grid">
-<div class="deck-card" onclick="selectDeck('current')"><h3>Current Hiragana</h3><p>A, K, S, T, N, H, M, and Y rows.</p></div>
-<div class="deck-card" onclick="selectDeck('adaptive')"><h3>Adaptive Review</h3><p>Weak cards appear more often. Strong cards less often.</p></div>
-<div class="deck-card" onclick="selectDeck('next')"><h3>Next 8 Hiragana</h3><p>らりるれろ, わ, を, ん.</p></div>
-<div class="deck-card" onclick="selectDeck('all')"><h3>All Basic Hiragana</h3><p>Current set + next 8 together.</p></div>
-<div class="deck-card" onclick="selectDeck('missed')"><h3>Missed Set</h3><p>Only cards you marked wrong.</p></div>
-</div><button class="secondary" onclick="showScreen('home')">Back</button>
-</section>
-
-<section id="modes" class="screen">
-<h2 id="deckTitle">Choose Mode</h2><div class="grid">
-<div class="deck-card" onclick="startMode('flashcard')"><h3>Flashcards</h3><p>Tap to reveal. Mark Got it or Missed it.</p></div>
-<div class="deck-card" onclick="startMode('multiple')"><h3>Multiple Choice</h3><p>Choose the correct reading.</p></div>
-<div class="deck-card" onclick="startMode('typing')"><h3>Typing</h3><p>Type the reading from memory.</p></div>
-</div><button class="secondary" onclick="showScreen('decks')">Back to Decks</button>
-</section>
-
-<section id="study" class="screen">
-<h2 id="studyTitle">Study</h2>
+<section id="decks" class="screen"><h2>Choose a Deck</h2><div class="grid">
+<div class="deck-card" onclick="selectDeck('current')"><h3>🇯🇵 Current Hiragana</h3><p>A, K, S, T, N, H, M, and Y rows.</p></div>
+<div class="deck-card" onclick="selectDeck('adaptive')"><h3>🐉 Adaptive Review</h3><p>Weak cards appear more often. Strong cards less often.</p></div>
+<div class="deck-card" onclick="selectDeck('next')"><h3>🔓 Next 8 Hiragana</h3><p>らりるれろ, わ, を, ん.</p></div>
+<div class="deck-card" onclick="selectDeck('all')"><h3>📚 All Basic Hiragana</h3><p>Current set + next 8 together.</p></div>
+<div class="deck-card" onclick="selectDeck('missed')"><h3>🔥 Missed Set</h3><p>Only cards you marked wrong.</p></div>
+</div><button class="secondary" onclick="showScreen('home')">Back</button></section>
+<section id="modes" class="screen"><h2 id="deckTitle">Choose Mode</h2><div class="grid">
+<div class="deck-card" onclick="startMode('flashcard')"><h3>🎴 Flashcards</h3><p>Tap to reveal. Mark Got it or Missed it.</p></div>
+<div class="deck-card" onclick="startMode('multiple')"><h3>🎯 Multiple Choice</h3><p>Choose the correct reading.</p></div>
+<div class="deck-card" onclick="startMode('typing')"><h3>⌨️ Typing</h3><p>Type the reading from memory.</p></div>
+</div><button class="secondary" onclick="showScreen('decks')">Back to Decks</button></section>
+<section id="study" class="screen"><h2 id="studyTitle">Study</h2>
 <div id="flashcardArea"><div class="card" onclick="flipCard()"><div class="front" id="front">あ</div><div class="back" id="back">a</div><div class="hint">Tap card to reveal / hide answer</div></div><button class="good" onclick="markCorrect()">Got it</button><button class="bad" onclick="markWrong()">Missed it</button></div>
 <div id="multipleArea" style="display:none;"><div class="question" id="mcQuestion">あ</div><div id="choices"></div><p id="mcFeedback" class="small"></p></div>
 <div id="typingArea" style="display:none;"><div class="question" id="typingQuestion">あ</div><input id="typingInput" placeholder="Type reading, e.g. a" onkeydown="if(event.key==='Enter') checkTyping()"><button onclick="checkTyping()">Check</button><p id="typingFeedback" class="small"></p><button id="typingNext" style="display:none;" onclick="nextQuestion()">Next</button></div>
-<div><button onclick="prevCard()">Previous</button><button onclick="nextQuestion()">Next</button><button class="secondary" onclick="shuffleCurrentDeck()">Shuffle</button></div>
-<div class="progress" id="progress"></div><button class="secondary" onclick="showScreen('modes')">Back to Modes</button>
-</section>
-
-<section id="dashboard" class="screen">
-<h2>Dashboard</h2>
-<div class="panel">
-<div class="stat-row"><strong>Total Questions</strong><span id="totalQuestions">0</span></div>
-<div class="stat-row"><strong>Correct</strong><span id="totalCorrect">0</span></div>
-<div class="stat-row"><strong>Accuracy</strong><span id="accuracy">0%</span></div>
-<div class="stat-row"><strong>Average Mastery</strong><span id="avgMastery">0%</span></div>
-<div class="stat-row"><strong>Readiness</strong><span id="readiness">Not ready</span></div>
-<div class="stat-row"><strong>Missed Set</strong><span id="missedCount">0</span></div>
-</div>
-<div class="panel"><h3>Adaptive Coach</h3><p id="coachAnalysis"></p><div id="weakCards"></div></div>
+<div><button onclick="prevCard()">Previous</button><button onclick="nextQuestion()">Next</button><button class="secondary" onclick="shuffleCurrentDeck()">Shuffle</button></div><div class="progress" id="progress"></div><button class="secondary" onclick="showScreen('modes')">Back to Modes</button></section>
+<section id="dashboard" class="screen"><h2>Dashboard</h2><div class="panel">
+<div class="stat-row"><strong>Total Questions</strong><span id="totalQuestions">0</span></div><div class="stat-row"><strong>Correct</strong><span id="totalCorrect">0</span></div><div class="stat-row"><strong>Accuracy</strong><span id="accuracy">0%</span></div><div class="stat-row"><strong>Average Mastery</strong><span id="avgMastery">0%</span></div><div class="stat-row"><strong>Readiness</strong><span id="readiness">Not ready</span></div><div class="stat-row"><strong>Missed Set</strong><span id="missedCount">0</span></div></div>
+<div class="panel"><h3>🐲 Adaptive Coach</h3><p id="coachAnalysis" class="quote"></p><div id="weakCards"></div></div>
 <div class="panel"><h3>Mastery by Card</h3><div id="masteryList" class="mastery-list"></div></div>
-<button onclick="showScreen('decks')">Study</button><button class="secondary" onclick="showScreen('home')">Home</button><button class="bad" onclick="resetProgress()">Reset Progress</button>
-</section>
-
+<button onclick="showScreen('decks')">Study</button><button class="secondary" onclick="showScreen('home')">Home</button><button class="bad" onclick="resetProgress()">Reset Progress</button></section>
 <script>
-const decks={current:{title:"Current Hiragana",cards:[
-["あ","a"],["い","i"],["う","u"],["え","e"],["お","o"],["か","ka"],["き","ki"],["く","ku"],["け","ke"],["こ","ko"],["さ","sa"],["し","shi"],["す","su"],["せ","se"],["そ","so"],["た","ta"],["ち","chi"],["つ","tsu"],["て","te"],["と","to"],["な","na"],["に","ni"],["ぬ","nu"],["ね","ne"],["の","no"],["は","ha"],["ひ","hi"],["ふ","fu"],["へ","he"],["ほ","ho"],["ま","ma"],["み","mi"],["む","mu"],["め","me"],["も","mo"],["や","ya"],["ゆ","yu"],["よ","yo"]
-]},next:{title:"Next 8 Hiragana",cards:[["ら","ra"],["り","ri"],["る","ru"],["れ","re"],["ろ","ro"],["わ","wa"],["を","wo/o"],["ん","n"]]}};
+const decks={current:{title:"Current Hiragana",cards:[["あ","a"],["い","i"],["う","u"],["え","e"],["お","o"],["か","ka"],["き","ki"],["く","ku"],["け","ke"],["こ","ko"],["さ","sa"],["し","shi"],["す","su"],["せ","se"],["そ","so"],["た","ta"],["ち","chi"],["つ","tsu"],["て","te"],["と","to"],["な","na"],["に","ni"],["ぬ","nu"],["ね","ne"],["の","no"],["は","ha"],["ひ","hi"],["ふ","fu"],["へ","he"],["ほ","ho"],["ま","ma"],["み","mi"],["む","mu"],["め","me"],["も","mo"],["や","ya"],["ゆ","yu"],["よ","yo"]]},next:{title:"Next 8 Hiragana",cards:[["ら","ra"],["り","ri"],["る","ru"],["れ","re"],["ろ","ro"],["わ","wa"],["を","wo/o"],["ん","n"]]}};
 decks.all={title:"All Basic Hiragana",cards:decks.current.cards.concat(decks.next.cards)};
 let missedDeck=JSON.parse(localStorage.getItem("missedDeck")||"[]"),stats=JSON.parse(localStorage.getItem("stats")||"{}"),mastery=JSON.parse(localStorage.getItem("mastery")||"{}");
 let selectedDeckKey="current",currentDeck=decks.current.cards.slice(),currentMode="flashcard",current=0,revealed=false,answered=false;
-
 function save(){localStorage.setItem("missedDeck",JSON.stringify(missedDeck));localStorage.setItem("stats",JSON.stringify(stats));localStorage.setItem("mastery",JSON.stringify(mastery))}
-function cardId(c){return c[0]+"|"+c[1]} function sameCard(a,b){return a[0]===b[0]&&a[1]===b[1]}
-function ensureStats(c){let id=cardId(c);if(!stats[id])stats[id]={seen:0,correct:0,missed:0};if(mastery[id]===undefined)mastery[id]=30;return stats[id]}
-function getMastery(c){let id=cardId(c);return mastery[id]===undefined?30:mastery[id]}
+function cardId(c){return c[0]+"|"+c[1]}function sameCard(a,b){return a[0]===b[0]&&a[1]===b[1]}function ensureStats(c){let id=cardId(c);if(!stats[id])stats[id]={seen:0,correct:0,missed:0};if(mastery[id]===undefined)mastery[id]=30;return stats[id]}function getMastery(c){let id=cardId(c);return mastery[id]===undefined?30:mastery[id]}
 function updateMastery(card,correct,mode){let id=cardId(card);if(mastery[id]===undefined)mastery[id]=30;let delta=correct?8:-15;if(correct&&mode==="typing")delta+=4;if(correct&&mode==="multiple")delta+=2;if(!correct&&mode==="typing")delta-=5;mastery[id]=Math.max(0,Math.min(100,mastery[id]+delta));save()}
 function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="dashboard")updateDashboard();if(id==="home")updateCoachHome()}
-function buildAdaptiveDeck(){let base=decks.current.cards.slice();let weighted=[];base.forEach(card=>{let m=getMastery(card);let reps=m<40?5:m<65?4:m<80?3:m<95?2:1;for(let i=0;i<reps;i++)weighted.push(card)});return weighted.sort(()=>Math.random()-0.5)}
+function buildAdaptiveDeck(){let weighted=[];decks.current.cards.forEach(card=>{let m=getMastery(card);let reps=m<40?5:m<65?4:m<80?3:m<95?2:1;for(let i=0;i<reps;i++)weighted.push(card)});return weighted.sort(()=>Math.random()-0.5)}
 function selectDeck(key){selectedDeckKey=key;if(key==="missed"){currentDeck=missedDeck.slice();deckTitle.textContent="Missed Set"}else if(key==="adaptive"){currentDeck=buildAdaptiveDeck();deckTitle.textContent="Adaptive Review"}else{currentDeck=decks[key].cards.slice();deckTitle.textContent=decks[key].title}current=0;showScreen("modes")}
-function startRecommendedLesson(){selectedDeckKey=missedDeck.length?"missed":"adaptive";currentDeck=missedDeck.length?missedDeck.slice():buildAdaptiveDeck();currentMode=getRecommendedMode();current=0;startMode(currentMode)}
-function getRecommendedMode(){let weak=getWeakCards();if(weak.length>=3)return"typing";return"multiple"}
+function startRecommendedLesson(){selectedDeckKey=missedDeck.length?"missed":"adaptive";currentDeck=missedDeck.length?missedDeck.slice():buildAdaptiveDeck();startMode(getRecommendedMode())}
+function getRecommendedMode(){return getWeakCards().length>=3?"typing":"multiple"}
 function startMode(mode){currentMode=mode;current=0;revealed=false;answered=false;let title=selectedDeckKey==="missed"?"Missed Set":selectedDeckKey==="adaptive"?"Adaptive Review":decks[selectedDeckKey].title;studyTitle.textContent=title+" - "+(mode==="flashcard"?"Flashcards":mode==="multiple"?"Multiple Choice":"Typing");flashcardArea.style.display=mode==="flashcard"?"block":"none";multipleArea.style.display=mode==="multiple"?"block":"none";typingArea.style.display=mode==="typing"?"block":"none";showScreen("study");updateStudy()}
 function updateStudy(){if(currentDeck.length===0){progress.textContent="No cards in this deck.";front.textContent="✓";back.textContent="";return}if(current>=currentDeck.length)current=0;let card=currentDeck[current];if(currentMode==="flashcard"){front.textContent=card[0];back.textContent=card[1];back.style.display=revealed?"block":"none"}else if(currentMode==="multiple"){buildMultipleChoice(card)}else{typingQuestion.textContent=card[0];typingInput.value="";typingFeedback.textContent="";typingNext.style.display="none"}progress.textContent=`Card ${current+1} of ${currentDeck.length} | Mastery: ${Math.round(getMastery(card))}% | Missed set: ${missedDeck.length}`}
-function flipCard(){if(currentMode==="flashcard"){revealed=!revealed;updateStudy()}}
-function nextQuestion(){if(!currentDeck.length)return;current=(current+1)%currentDeck.length;revealed=false;answered=false;updateStudy()}
-function prevCard(){if(!currentDeck.length)return;current=(current-1+currentDeck.length)%currentDeck.length;revealed=false;answered=false;updateStudy()}
-function record(card,correct){let s=ensureStats(card);s.seen++;correct?s.correct++:s.missed++;updateMastery(card,correct,currentMode);save()}
-function addMissed(card){if(!missedDeck.some(m=>sameCard(m,card)))missedDeck.push(card);save()}
-function removeMissed(card){if(getMastery(card)>=70){missedDeck=missedDeck.filter(m=>!sameCard(m,card));if(selectedDeckKey==="missed"){currentDeck=missedDeck.slice();if(current>=currentDeck.length)current=0}save()}}
-function markCorrect(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,true);if(selectedDeckKey==="missed")removeMissed(card);nextQuestion()}
-function markWrong(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,false);addMissed(card);nextQuestion()}
+function flipCard(){if(currentMode==="flashcard"){revealed=!revealed;updateStudy()}}function nextQuestion(){if(!currentDeck.length)return;current=(current+1)%currentDeck.length;revealed=false;answered=false;updateStudy()}function prevCard(){if(!currentDeck.length)return;current=(current-1+currentDeck.length)%currentDeck.length;revealed=false;answered=false;updateStudy()}
+function record(card,correct){let s=ensureStats(card);s.seen++;correct?s.correct++:s.missed++;updateMastery(card,correct,currentMode);save()}function addMissed(card){if(!missedDeck.some(m=>sameCard(m,card)))missedDeck.push(card);save()}function removeMissed(card){if(getMastery(card)>=70){missedDeck=missedDeck.filter(m=>!sameCard(m,card));if(selectedDeckKey==="missed"){currentDeck=missedDeck.slice();if(current>=currentDeck.length)current=0}save()}}
+function markCorrect(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,true);if(selectedDeckKey==="missed")removeMissed(card);nextQuestion()}function markWrong(){if(!currentDeck.length)return;let card=currentDeck[current];record(card,false);addMissed(card);nextQuestion()}
 function buildMultipleChoice(card){answered=false;mcQuestion.textContent=card[0];mcFeedback.textContent="";let pool=decks.all.cards.filter(c=>!sameCard(c,card));let choices=[card];while(choices.length<4&&pool.length){choices.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0])}choices.sort(()=>Math.random()-0.5);document.getElementById("choices").innerHTML="";choices.forEach(ch=>{let b=document.createElement("button");b.className="choice";b.textContent=ch[1];b.onclick=()=>answerMC(b,ch,card);document.getElementById("choices").appendChild(b)})}
 function answerMC(button,choice,correctCard){if(answered)return;answered=true;document.querySelectorAll("button.choice").forEach(b=>{if(b.textContent===correctCard[1])b.classList.add("correct")});if(sameCard(choice,correctCard)){record(correctCard,true);removeMissed(correctCard);mcFeedback.textContent="Correct."}else{record(correctCard,false);addMissed(correctCard);button.classList.add("wrong");mcFeedback.textContent=`Missed it. ${correctCard[0]} = ${correctCard[1]}`}setTimeout(nextQuestion,900)}
 function checkTyping(){if(!currentDeck.length)return;let card=currentDeck[current],input=typingInput.value.trim().toLowerCase(),accepted=card[1].toLowerCase().split("/").map(x=>x.trim()),ok=accepted.includes(input);if(ok){record(card,true);removeMissed(card);typingFeedback.textContent="Correct."}else{record(card,false);addMissed(card);typingFeedback.textContent=`Missed it. Correct answer: ${card[1]}`}typingNext.style.display="inline-block"}
 function shuffleCurrentDeck(){for(let i=currentDeck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[currentDeck[i],currentDeck[j]]=[currentDeck[j],currentDeck[i]]}current=0;revealed=false;updateStudy()}
-function getWeakCards(){return decks.current.cards.filter(c=>getMastery(c)<70).sort((a,b)=>getMastery(a)-getMastery(b))}
-function avgMasteryCurrent(){let arr=decks.current.cards.map(c=>getMastery(c));return arr.reduce((a,b)=>a+b,0)/arr.length}
-function readinessText(){let avg=avgMasteryCurrent(),weak=getWeakCards().length;if(avg>=85&&weak<=3)return"Ready soon";if(avg>=90&&weak===0)return"Ready";return"Not ready"}
+function getWeakCards(){return decks.current.cards.filter(c=>getMastery(c)<70).sort((a,b)=>getMastery(a)-getMastery(b))}function avgMasteryCurrent(){let arr=decks.current.cards.map(c=>getMastery(c));return arr.reduce((a,b)=>a+b,0)/arr.length}
+function readinessText(){let avg=avgMasteryCurrent(),weak=getWeakCards().length;if(avg>=90&&weak===0)return"Ready";if(avg>=85&&weak<=3)return"Ready soon";return"Not ready"}
 function updateDashboard(){let total=0,correct=0;Object.keys(stats).forEach(id=>{total+=stats[id].seen;correct+=stats[id].correct});totalQuestions.textContent=total;totalCorrect.textContent=correct;accuracy.textContent=total?Math.round(correct/total*100)+"%":"0%";avgMastery.textContent=Math.round(avgMasteryCurrent())+"%";readiness.textContent=readinessText();missedCount.textContent=missedDeck.length;let weak=getWeakCards();weakCards.innerHTML="";weak.slice(0,8).forEach(c=>{let s=document.createElement("span");s.className="pill";s.textContent=`${c[0]} = ${c[1]} (${Math.round(getMastery(c))}%)`;weakCards.appendChild(s)});coachAnalysis.textContent=coachMessage();buildMasteryList()}
-function coachMessage(){let avg=avgMasteryCurrent(),weak=getWeakCards();if(missedDeck.length>0)return`Start with your missed set. You have ${missedDeck.length} card(s) that need repair.`;if(avg<60)return"Keep reviewing the current set. Do not add new hiragana yet.";if(weak.length>5)return"Use Adaptive Review. Weak cards need more repetitions before you add the next 8.";if(avg>=85&&weak.length<=3)return"You're getting close. Do one typing session; if it stays strong, start the next 8.";if(avg>=90&&weak.length===0)return"You're ready for the next 8 hiragana.";return"Use Adaptive Review today. The app will show weak cards more often."}
+function coachMessage(){let avg=avgMasteryCurrent(),weak=getWeakCards();if(missedDeck.length>0)return`Drago says: start with your missed set. You have ${missedDeck.length} card(s) that need repair.`;if(avg<60)return"Drago says: keep reviewing the current set. Do not add new hiragana yet.";if(weak.length>5)return"Drago says: use Adaptive Review. Weak cards need more repetitions before the next 8.";if(avg>=90&&weak.length===0)return"Drago says: you're ready for the next 8 hiragana.";if(avg>=85&&weak.length<=3)return"Drago says: you're close. Do one typing session before unlocking the next set.";return"Drago says: use Adaptive Review today. Weak cards will appear more often."}
 function buildMasteryList(){masteryList.innerHTML="";decks.current.cards.forEach(c=>{let m=Math.round(getMastery(c));let row=document.createElement("div");row.className="mastery-item";row.innerHTML=`<strong>${c[0]} ${c[1]}</strong><div class="bar"><div class="bar-fill" style="width:${m}%"></div></div><span>${m}%</span>`;masteryList.appendChild(row)})}
-function updateCoachHome(){coachText.textContent=coachMessage()}
-function resetProgress(){if(!confirm("Reset all progress, mastery, and missed cards?"))return;missedDeck=[];stats={};mastery={};save();updateDashboard();updateCoachHome()}
+function updateCoachHome(){coachText.textContent=coachMessage()}function resetProgress(){if(!confirm("Reset all progress, mastery, and missed cards?"))return;missedDeck=[];stats={};mastery={};save();updateDashboard();updateCoachHome()}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js");updateCoachHome();
 </script>
 </body>

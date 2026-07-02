@@ -1,3 +1,3 @@
-# Language Coach Adaptive
+# DragoLearn
 
-Adaptive no-ads language learning PWA.
+Dark purple adaptive language learning PWA.
