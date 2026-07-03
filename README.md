@@ -1,3 +1,3 @@
-# DragoLearn v10
+# DragoLearn v11
 
-Trace Guide is OFF by default. Tap Show Trace Guide only when needed.
+Adds Comprehensible Input alongside Drago Sessions, tracing, flashcards, and multiple choice.
