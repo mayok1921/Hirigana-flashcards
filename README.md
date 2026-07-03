@@ -1,3 +1,3 @@
-# DragoLearn v8
+# DragoLearn v9
 
-Mixed Drago Session: flashcards, multiple choice, and phone drawing in one adaptive session.
+Adds Trace Guide toggle for hiragana, katakana, and kanji drawing practice. Drawing prompts show the reading/meaning, while the transparent character can be traced or hidden for recall.
