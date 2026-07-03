@@ -1,3 +1,3 @@
-# DragoLearn
+# DragoLearn v8
 
-Dragon-themed adaptive Japanese learning PWA with Hiragana, Katakana, Kanji, lesson groups, cumulative review, mastery tracking, multiple choice, typing, and flashcards.
+Mixed Drago Session: flashcards, multiple choice, and phone drawing in one adaptive session.
